@@ -20,7 +20,7 @@ This is a simple app that converts SMILES (Simplified Molecular-Input Line-Entry
 ## How to configure environment
 
 - Make a file `frontend/.env` as a copy of `frontend/.env.example`. \
-  Set `REACT_APP_SERVER_API_URL=<SERVER_API_URL>`. For example, `REACT_APP_SERVER_API_URL="http://localhost:8080"`.
+  Set `REACT_APP_SERVER_API_URL=<SERVER_API_URL>`. For example, `REACT_APP_SERVER_API_URL="http://localhost:8080/api"`.
 
 ## How to run for development
 
