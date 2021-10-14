@@ -38,6 +38,13 @@ This is a simple app that converts SMILES (Simplified Molecular-Input Line-Entry
   npm start     # start development server
   ```
 
+## How to run tests
+
+- In `backend` directory, run the following command
+  ```
+  go test ./tests
+  ```
+
 ## Current progress
 
 ### Front end
