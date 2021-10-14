@@ -1,21 +1,38 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import api from '../../services/api'
+import { IUPAC, SMILES } from '../../types'
 
 interface AlkaneState {
-  smiles: string
-  iupac: string
+  smiles: SMILES
+  iupac: IUPAC
 }
 
-// Define the initial state using that type
 const initialState: AlkaneState = {
-  smiles: 'CC(C)CC',
-  iupac: '2-methylbutane',
+  smiles: '',
+  iupac: '',
 }
+
+export const getIUPACFromSMILES = createAsyncThunk(
+  'alkanes/getIUPACFromSMILES',
+  async (smiles: SMILES) => {
+    const response = await api.getIUPACFromSMILES(smiles)
+    return {
+      smiles,
+      iupac: response.data.result,
+    }
+  }
+)
 
 const alkaneSlice = createSlice({
   name: 'alkane',
-  // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getIUPACFromSMILES.fulfilled, (state, action) => {
+      state.smiles = action.payload.smiles
+      state.iupac = action.payload.iupac
+    })
+  },
 })
 
 export default alkaneSlice.reducer
