@@ -38,17 +38,12 @@ This is a simple app that converts SMILES (Simplified Molecular-Input Line-Entry
   npm start     # start development server
   ```
 
-## How to do automated testing
-
-- In `frontend` directory, run `npm run cypress:run` to do e2e tests
-
 ## Current progress
 
 ### Front end
 
 - Set up front end with create-react-app
 - Uses TypeScript.
-- Added E2E test using Cypress
 - Uses REST API endpoint to request SMILES to IUPAC nomenclature conversion to back end
 
 ### Back end
