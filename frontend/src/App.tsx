@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Row, Col } from 'reactstrap'
+import { ToastContainer } from 'react-toastify'
 
 import InputForm from './components/InputForm'
 import { RootState } from './redux/store'
@@ -34,6 +35,7 @@ function App() {
           </Col>
         </Row>
       </main>
+      <ToastContainer />
     </div>
   )
 }
