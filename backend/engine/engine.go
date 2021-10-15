@@ -41,22 +41,34 @@ var names = [12]string{"methane", "ethane", "propane", "butane", "pentane", "hex
 var prefixes = [12]string{"", "di", "tri", "tetra", "penta", "hexa", "hepta", "octa", "nona", "deca", "undeca", "dodeca"}
 
 
+/*
+ * Get compound name, e.g. methyl from methan, ethyl from ethan, ...
+ */
 func compoundName(name string) string {
   return strings.ReplaceAll(name, "ane", "yl")
 }
 
+/*
+ * Parse tree structure from SMILES format and returns pointer to
+ * root node and longest branch leaf node.
+ */
 func parseToTree(smiles string) (*Node, *Node) {
   var root *Node = nil
-  var stack Stack
+  var stack Stack   // stack will keep last nodes of the branches building in progress
   var longestBranchLeaf *Node = nil
 
+  // Iterate each character in SMILES format and process
   for _, char := range smiles {
     charStr := string(char)
     if charStr == "(" {
+      // Start of new branch so use last node as root of new branch
+      // e.g. CC(CC) -> node for second character is root of new branch (CC)
       stack.Push(stack.Head())
     } else if charStr == ")" {
+      // End of the branch so go back to previous branch
       stack.Pop()
     } else if charStr == "C" {
+      // Create new node and link to last node of current branch
       parent := stack.Head()
       var newNode Node
       newNode.parent = parent
@@ -90,6 +102,11 @@ func parseToTree(smiles string) (*Node, *Node) {
   return root, longestBranchLeaf
 }
 
+/*
+ * Build IUPAC nomenclature for a sub-branch. Gets start position and node
+ * of the sub-branch as param and returns nomenclature part for it.
+ * This function just traverses to the leaf assuming sub-branch is straight chain.
+ */
 func buildIUPACNomenclatureFromSubBranch(startPos int, root *Node) string {
   length := 0
   node := root
@@ -109,6 +126,10 @@ func buildIUPACNomenclatureFromSubBranch(startPos int, root *Node) string {
   return result
 }
 
+/*
+ * Build IUPAC nomenclature for a branch. Gets start node
+ * of the branch as param and returns nomenclature part for it
+ */
 func buildIUPACNomenclatureFromBranch(root *Node) string {
   node := root
   length := 0
@@ -133,7 +154,12 @@ func buildIUPACNomenclatureFromBranch(root *Node) string {
   return nomenclature
 }
 
+/*
+ * Build IUPAC nomenclature for the tree parsed from SMILES format.
+ * Accepts longest branch leaf node as param and returns nomenclature.
+ */
 func buildIUPACNomenclature(longestBranchLeaf *Node) string {
+  // Get the list of longest chain to use as base
   baseBranch := make([]*Node, 0, 10)
   node := longestBranchLeaf
   idx := 0
@@ -152,6 +178,12 @@ func buildIUPACNomenclature(longestBranchLeaf *Node) string {
     }
   }
 
+  /*
+   * Create map of compound name => branching positions for nomenclature parts.
+   * e.g.: ("methyl" => {2,3,3}, "ethyl" => {7})
+   * This map will then be used to sort these parts
+   * by alphabetical order of compound name to finally make IUPAC nomenclature
+   */
   var branchNomenclatures map[string][]int = make(map[string][]int)
   for i := 0; i < len(baseBranch) - 1; i++ {
     for _, branchNode := range *(baseBranch[i].children) {
@@ -166,6 +198,8 @@ func buildIUPACNomenclature(longestBranchLeaf *Node) string {
       }
     }
   }
+
+  /* Generate nomenclature from map created above */
 
   parts := make([]NomenclaturePart, 0, 10)
   for branchName := range branchNomenclatures {
@@ -195,6 +229,9 @@ func buildIUPACNomenclature(longestBranchLeaf *Node) string {
   return result + names[longestBranchLeaf.pos - 1]
 }
 
+/*
+ * public API function to get IUPAC nomenclature from SMILES format.
+ */
 func GetIUPACNomenclature(smiles string) string {
   _, longestBranchLeaf := parseToTree(smiles)
 

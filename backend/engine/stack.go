@@ -24,6 +24,7 @@ func (s *Stack) Pop() (*Node, bool) {
   }
 }
 
+// Get element at the top of the stack
 func (s *Stack) Head() (*Node) {
   if s.IsEmpty() {
     return nil
