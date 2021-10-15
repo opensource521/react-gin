@@ -10,15 +10,10 @@ const axiosInstance: AxiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error!.response!.data!.msg) {
-      toast.error(error.response.data.msg, {
-        position: toast.POSITION.TOP_RIGHT,
-      })
-    } else {
-      toast.error('Network error', {
-        position: toast.POSITION.TOP_RIGHT,
-      })
-    }
+    const msg = error.response?.data?.msg || 'Failed to connect to server'
+    toast.error(msg, {
+      position: toast.POSITION.TOP_RIGHT,
+    })
   }
 )
 
