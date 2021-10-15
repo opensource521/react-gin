@@ -41,8 +41,19 @@ This is a simple app that converts SMILES (Simplified Molecular-Input Line-Entry
 ## How to run tests
 
 - In `backend` directory, run the following command
+
   ```
-  go test ./tests
+  go test ./tests       # unit tests
+  ```
+
+- In `frontend` directory, run the following command
+
+  ```
+  npm run test          # unit tests
+  ```
+
+  ```
+  npm run cypress:run   # e2e tests
   ```
 
 ## Current progress
@@ -62,4 +73,3 @@ This is a simple app that converts SMILES (Simplified Molecular-Input Line-Entry
 ### TO-DOs:
 
 - Proceed with engine development including implementing more IUPAC rules
-- Add unit tests for engine
