@@ -28,7 +28,8 @@ function InputForm({ smiles, onSubmit }: InputFormProps) {
       initialValues={initialValues}
       validate={handleValidate}
       onSubmit={handleSubmit}
-      render={({ errors, touched }) => (
+    >
+      {({ errors, touched }) => (
         <Form>
           <Label>SMILES *</Label>
           <Field
@@ -48,7 +49,7 @@ function InputForm({ smiles, onSubmit }: InputFormProps) {
           </Button>
         </Form>
       )}
-    />
+    </Formik>
   )
 }
 
