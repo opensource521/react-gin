@@ -55,13 +55,8 @@ This is a simple app that converts SMILES (Simplified Molecular-Input Line-Entry
   - Run e2e tests
 
     - Start backend and frontend
-    - Open the cypress window
-
-      ```
-      npm run cypress:run   # open the cypress window
-      ```
-
-    - Start tests by clicking a test file
+    - Run `npm run cypress:run` to start cypress app. Cypress window will open.
+    - Start tests by clicking a test file or clicking on `Run` button.
 
 ## Current progress
 
