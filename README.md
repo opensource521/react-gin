@@ -69,9 +69,5 @@ This is a simple app that converts SMILES (Simplified Molecular-Input Line-Entry
 ### Back end
 
 - Set up back end with Gin framework of Go language.
-- Building engine to convert SMILES TO IUPAC. API part (using GIN) uses this engine.
-- Engine only handles simple cases for now. Still work in progress.
-
-### TO-DOs:
-
-- Proceed with engine development including implementing more IUPAC rules
+- Built engine to convert SMILES TO IUPAC. API part (using GIN) uses this engine.
+- Engine only handles straight-chain and branched alkanes. i.e. no cyclics.
