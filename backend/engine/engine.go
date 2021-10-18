@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"errors"
 	"sort"
 	"strconv"
 	"strings"
@@ -91,14 +92,17 @@ func bfs(graph Graph, start int, root int) ([]Chain) {
 /**
 * Construct a graph from SMILES and return it
 */
-func parseToGraph(smiles string) Graph {
+func parseToGraph(smiles string) (Graph, error) {
 	var graph Graph
 	var stack Stack
 	var count int
-	count = 1
+	var openBracketCount int
+
+	count, openBracketCount = 1, 0
 
 	for i := 0; i < len(smiles); i++ {
 		ch := smiles[i]
+
 		switch ch {
 			case 'C':
 				if !stack.IsEmpty() {
@@ -112,17 +116,31 @@ func parseToGraph(smiles string) Graph {
 			case '(':
 				// Push the last vertex again so that the first vertex on the new branch can join it
 				stack.Push(stack.Head())
+				openBracketCount ++
 				break
 			case ')':
 				// End of branch so pop the last vertex of it
+				if openBracketCount == 0 {
+					return graph, errors.New("Brackets not opened properly")
+				}
+
+				if i > 0 && smiles[i - 1] == '(' {
+					return graph, errors.New("Empty content inside brackets")
+				}
+
 				stack.Pop()
+				openBracketCount --
 				break
 		}
 	}
 
+	if openBracketCount > 0 {
+		return graph, errors.New("Brackets not closed properly")
+	}
+
 	graph.SetSize(count)	// Set the number of vertexes of a graph
 
-	return graph
+	return graph, nil
 }
 
 /*
@@ -346,13 +364,15 @@ func getIUPACRecursively(graph Graph, start int, root int, isMainChain bool) Com
 }
 
 // Return IUPAC of SMILES. Entry point
-func GetIUPAC(smiles string) string {
-	var graph Graph
+func GetIUPAC(smiles string) (string, error) {
 	var compound Compound
 
-	graph = parseToGraph(smiles)
+	graph, err := parseToGraph(smiles)
 
-	compound = getIUPACRecursively(graph, 1, 0, true)
-
-	return compound.GetIUPAC()
+	if err == nil {
+		compound = getIUPACRecursively(graph, 1, 0, true)
+		return compound.GetIUPAC(), nil
+	} else {
+		return "", err
+	}
 }

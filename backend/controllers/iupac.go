@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"regexp"
 
@@ -18,15 +19,22 @@ func (ctrl IUPACController) GetIUPACFromSMILES(c *gin.Context) {
 	
 	if !isSmilesValid(smiles) {
 		c.JSON(http.StatusUnprocessableEntity, gin.H{
-			"smiles": "Smiles is invalid",
+			"msg": "SMILES is invalid",
 		})
 
 		return
 	}
 
-	iupac := engine.GetIUPAC(smiles)
+	result, err := engine.GetIUPAC(smiles)
 
-	c.JSON(http.StatusOK, gin.H{"result" : iupac})
+	if err == nil {
+		c.JSON(http.StatusOK, gin.H{"result" : result})
+	} else {
+		fmt.Println(err)
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"msg": err.Error(),
+		})
+	}
 }
 
 func isSmilesValid(smiles string) bool {

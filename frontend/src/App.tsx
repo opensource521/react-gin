@@ -27,10 +27,12 @@ function App() {
           Applied Chemistry) format
         </p>
       </div>
-      <main>
+      <main className="p-5">
         <Row className="justify-content-center">
-          <Col lg={3} md={6}>
-            <InputForm smiles={smiles} onSubmit={handleSubmit} />
+          <Col lg={6}>
+            <div className="w-50">
+              <InputForm smiles={smiles} onSubmit={handleSubmit} />
+            </div>
             <h3 className="mt-3">IUPAC: {iupac}</h3>
           </Col>
         </Row>
