@@ -24,7 +24,7 @@ func (ctrl IUPACController) GetIUPACFromSMILES(c *gin.Context) {
 		return
 	}
 
-	iupac := engine.GetIUPACNomenclature(smiles)
+	iupac := engine.GetIUPAC(smiles)
 
 	c.JSON(http.StatusOK, gin.H{"result" : iupac})
 }
